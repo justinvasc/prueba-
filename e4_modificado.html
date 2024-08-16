@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Ejercicio 1 </title>
+	<link rel="stylesheet" href="ol/ol.css"	type="text/css"/>
+	<link rel="stylesheet" href="ol/ol-layerswitcher.css" type="text/css"/>
+	<script src="ol/ol.js"></script>
+	<script src="ol/ol-layerswitcher.js"></script>
+</head>
+<body>
+	<div style="width:800px; height:600px" id="map"></div>
+	<script defer="defer" type="text/javascript">
+	
+		var vista = new ol.View({
+			projection: "CRS:84",
+		});
+		var map = new ol.Map({
+			target: 'map',
+			view: vista,
+			
+		controls: ol.control.defaults().extend ([
+			new ol.control.MousePosition ({
+				coordinateFormat: ol.coordinate.toStringHDMS,
+			}),
+		new ol.control.ScaleLine (),
+		new ol.control.ZoomSlider (),
+		]),
+		});
+		
+		vista.fit([-81, -5.05, -75.1, 1.5084], map.getSize());
+		
+		var wmsLayer = new ol.layer.Tile({
+			type: 'base',
+			title: 'CUENCAS',
+			source: new ol.source.TileWMS({
+			url:'https://www.geoportaligm.gob.ec/p_geoinformacion/Clima_Hidrologia/wms',
+			params: {LAYERS: 'CH_EvapotranspiracionAnual'},
+		 })
+		});
+		
+		map.addLayer(wmsLayer);
+		
+		var wmsLayer2 = new ol.layer.Tile({
+			type: 'base',
+			title: 'EVAPOTRANSPIRACION',
+			source: new ol.source.TileWMS({
+			 url: 'https://www.geoportaligm.gob.ec/p_geoinformacion/Clima_Hidrologia/wms',
+			 params: {LAYERS: 'CH_Cuencas', format: "image/png"},
+			})
+		});
+		map.addLayer(wmsLayer2);
+		
+		var layerSwitcher = new ol.control.LayerSwitcher({
+			tipLabel: 'Leyenda'
+		});
+		map.addControl(layerSwitcher);
+	</script>
+</body>
+</html>
